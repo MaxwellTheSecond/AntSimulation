@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class Controller : MonoBehaviour
 {
+    [Header("Controller options")]
     [SerializeField] GameObject foodGameObject;
     [SerializeField] GameObject antGameObject;
     [SerializeField] int startingAnts = 10;
-    Vector3 clickPosition;
-    // Update is called once per frame
 
-    private void Start() {
+    private Vector3 clickPosition;
+
+    void Awake() {
         for(int i = 0; i< startingAnts; i++)
         {
             Instantiate(antGameObject, new Vector3(0,0,0), new Quaternion(Random.value,Random.value,Random.value,0));
         }
     }
+
     void Update()
     {
         if(Input.GetMouseButtonDown(1))
