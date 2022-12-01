@@ -7,23 +7,21 @@ public class Pheromone : MonoBehaviour
     [SerializeField] float pheromoneDecayRate = 1f;
     [SerializeField] float pheromoneDecayAmount = 0.1f;
 
-    public float strength;
-    private GameObject pheromone;
-    public int type {get; set;} //0 == home; 1 == food
-    private Vector2 position;
+    public float strength {get; private set;}
+    public int type {get; private set;} //0 == home; 1 == food
+    public Vector2 position {get; private set;}
     
     private void Awake() {
     InvokeRepeating("Decay", pheromoneDecayRate, pheromoneDecayRate);
     }
 
-    public void InitializePheromone(float _x, float _y, GameObject _pheromone, int _type)
+    public void InitializePheromone(float _x, float _y, int _type)
     {
-        this.position.x = _x;
-        this.position.y = _y;
+        position = new Vector2(_x, _y);
         this.type = _type;
-        this.pheromone = _pheromone;
-        this.pheromone.GetComponent<Renderer>().material.color = _type==0 ? Color.blue : Color.red;
+        this.GetComponent<Renderer>().material.color = _type==0 ? Color.blue : Color.red;
         this.strength = 1;
+        PheromoneMap.instance.AddPheromone(this);
     }
 
     private void Decay()
@@ -32,13 +30,16 @@ public class Pheromone : MonoBehaviour
         
         if(strength>0)
         {
-            SpriteRenderer renderer = pheromone.GetComponent<SpriteRenderer>();
+            SpriteRenderer renderer = GetComponent<SpriteRenderer>();
             Color color = renderer.material.color;
             color.a=strength;
             renderer.material.color = color;
         }
-
-        else Destroy(gameObject);
+        else
+        {   
+            PheromoneMap.instance.RemovePheromone(this);
+            Destroy(gameObject);
+        }
 
     }
 }

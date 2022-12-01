@@ -113,12 +113,14 @@ public class Ant2 : MonoBehaviour
             closestFood.ToggleCarry();
             closestFood.GetComponent<Collider2D>().enabled = false;
             closestFood.gameObject.transform.position = transform.GetChild(0).position;
+            desiredDirection = -desiredDirection;
         }
         if(other.transform.tag == "Anthill" && carryingFood)
         {
             GameObject _thisFood = transform.GetChild(0).GetChild(0).gameObject;
             Destroy (_thisFood);
             carryingFood = false;
+            desiredDirection = -desiredDirection;
         }
     }
 
@@ -133,7 +135,7 @@ public class Ant2 : MonoBehaviour
     {
         GameObject pheromone = Instantiate(pheromoneModel, new Vector3(position.x, position.y, 0), Quaternion.identity);
         Pheromone component = pheromone.GetComponent<Pheromone>();
-        component.InitializePheromone(position.x, position.y, pheromone, carryingFood ? 1 : 0);
+        component.InitializePheromone(position.x, position.y, carryingFood ? 1 : 0);
     }
 
 
@@ -144,32 +146,27 @@ public class Ant2 : MonoBehaviour
         float rightSensorValue = GetSensorValue(rightSensor);
 
         if(centerSensorValue > Mathf.Max(leftSensorValue, rightSensorValue))
-        desiredDirection = (desiredDirection + new Vector2(0,1)).normalized;
+        {
+        Debug.Log("Going forwards towards" + desiredDirection);
+        }
         else if(leftSensorValue > rightSensorValue)
-        desiredDirection = (desiredDirection + new Vector2(-1,-1)).normalized;
+        {
+        Debug.Log("Going left" + desiredDirection);
+        }
         else if(rightSensorValue > leftSensorValue)
-        desiredDirection =  (desiredDirection + new Vector2(1,1)).normalized;
-
+        {
+        Debug.Log("Going right" + desiredDirection);
+        }
 
     }
     
     private float GetSensorValue(GameObject _sensor)
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(_sensor.transform.position, 0.5f, pheromoneMask);
         float sensorValue = 0f;
-        foreach (Collider2D collider in colliders)
+        List<Pheromone> found = PheromoneMap.instance.GetAllInCircle(new Vector2(_sensor.transform.position.x, _sensor.transform.position.y), 0.5f, carryingFood ? 0 : 1);
+        foreach(Pheromone pheromone in found)
         {
-            Pheromone pheromone = collider.gameObject.GetComponent<Pheromone>();
-            if(carryingFood && pheromone.type == 0)
-            {
-            sensorValue += pheromone.strength;
-            Debug.Log("found blue bubble");
-            }
-            else if(!carryingFood && pheromone.type == 1)
-            {
-            sensorValue += pheromone.strength;
-            Debug.Log("found red bubble");
-            }
+            sensorValue = sensorValue + pheromone.strength;
         }
         return sensorValue;
     }

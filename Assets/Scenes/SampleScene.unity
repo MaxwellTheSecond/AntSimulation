@@ -207,6 +207,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &873802363 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5904499725682443286, guid: 31744c51287b2b3439cb18c74c7b0086, type: 3}
+  m_PrefabInstance: {fileID: 913159383}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &873802364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 873802363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f009387990745c4e98ffe16627da358, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &913159383
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -216,8 +233,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5904499725682443272, guid: 31744c51287b2b3439cb18c74c7b0086, type: 3}
       propertyPath: startingAnts
-      value: 0
+      value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 5904499725682443272, guid: 31744c51287b2b3439cb18c74c7b0086, type: 3}
+      propertyPath: pheromoneModel
+      value: 
+      objectReference: {fileID: 8694693784002173818, guid: 47f2d815c54c1b24986e498fc63c3731, type: 3}
     - target: {fileID: 5904499725682443273, guid: 31744c51287b2b3439cb18c74c7b0086, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -275,10 +296,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4799428743306189241, guid: 77e8f3f19640b3b4c94c9ed7a7d4dad3, type: 3}
-      propertyPath: m_Radius
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 6940283358752601849, guid: 77e8f3f19640b3b4c94c9ed7a7d4dad3, type: 3}
       propertyPath: m_Name
       value: ant
@@ -289,11 +306,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6940283358752601855, guid: 77e8f3f19640b3b4c94c9ed7a7d4dad3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.06
+      value: 5.76
       objectReference: {fileID: 0}
     - target: {fileID: 6940283358752601855, guid: 77e8f3f19640b3b4c94c9ed7a7d4dad3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.09
+      value: -2.51
       objectReference: {fileID: 0}
     - target: {fileID: 6940283358752601855, guid: 77e8f3f19640b3b4c94c9ed7a7d4dad3, type: 3}
       propertyPath: m_LocalPosition.z

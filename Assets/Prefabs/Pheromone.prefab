@@ -136,6 +136,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57e017f51f978c04cbd935a738f008ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pheromoneDecayRate: 1
+  pheromoneDecayRate: 0.7
   pheromoneDecayAmount: 0.02
-  strength: 0

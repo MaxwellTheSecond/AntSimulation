@@ -8,6 +8,7 @@ public class Controller : MonoBehaviour
     [SerializeField] GameObject foodGameObject;
     [SerializeField] GameObject antGameObject;
     [SerializeField] int startingAnts = 10;
+    [SerializeField] GameObject pheromoneModel;
 
     private Vector3 clickPosition;
 
@@ -20,18 +21,28 @@ public class Controller : MonoBehaviour
 
     void Update()
     {
+        if(Input.GetMouseButtonDown(0))
+        {
+            clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            clickPosition.z = 0;
+            GameObject pheromone = Instantiate(pheromoneModel, new Vector3(clickPosition.x, clickPosition.y, 0), Quaternion.identity);
+            Pheromone component = pheromone.GetComponent<Pheromone>();
+            component.InitializePheromone(clickPosition.x, clickPosition.y, 0);
+        }
+
         if(Input.GetMouseButtonDown(1))
         {
             clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             clickPosition.z = 0;
-            Instantiate(foodGameObject, clickPosition, Quaternion.identity);
+            GameObject pheromone = Instantiate(pheromoneModel, new Vector3(clickPosition.x, clickPosition.y, 0), Quaternion.identity);
+            Pheromone component = pheromone.GetComponent<Pheromone>();
+            component.InitializePheromone(clickPosition.x, clickPosition.y, 1);
         }
-
         if(Input.GetMouseButtonDown(2))
         {
             clickPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             clickPosition.z = 0;
-            Instantiate(antGameObject, clickPosition, Quaternion.identity);
+            Instantiate(antGameObject, clickPosition, new Quaternion(Random.value,Random.value,Random.value,0));
         }
     }
 }
