@@ -8,7 +8,6 @@ public class PheromoneMap : MonoBehaviour
 
     public List<Pheromone> homePheromones {get; private set;}
     public List<Pheromone> foodPheromones {get; private set;}
-    int type;
 
     private void Awake()
     {

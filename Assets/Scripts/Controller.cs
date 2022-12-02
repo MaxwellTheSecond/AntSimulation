@@ -15,7 +15,7 @@ public class Controller : MonoBehaviour
     void Awake() {
         for(int i = 0; i< startingAnts; i++)
         {
-            Instantiate(antGameObject, new Vector3(0,0,0), new Quaternion(Random.value,Random.value,Random.value,0));
+            Instantiate(antGameObject, GameObject.FindGameObjectWithTag("Anthill").transform.position, new Quaternion(Random.value,Random.value,Random.value,0));
         }
     }
 
@@ -44,5 +44,10 @@ public class Controller : MonoBehaviour
             clickPosition.z = 0;
             Instantiate(antGameObject, clickPosition, new Quaternion(Random.value,Random.value,Random.value,0));
         }
+    }
+
+    public static void MakeNewAnt()
+    {
+        Instantiate(GameObject.FindObjectOfType<Ant2>(), GameObject.FindGameObjectWithTag("Anthill").transform.position, new Quaternion(Random.value,Random.value,Random.value,0));
     }
 }

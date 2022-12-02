@@ -16,6 +16,7 @@ public class Ant2 : MonoBehaviour
     [SerializeField] GameObject leftSensor;
     [SerializeField] GameObject centerSensor;
     [SerializeField] GameObject rightSensor;
+    [SerializeField] float sensorRadius = 0.33f;
 
     [Header("Pheromone")]
     [SerializeField] GameObject pheromoneModel;
@@ -36,6 +37,7 @@ public class Ant2 : MonoBehaviour
         position = transform.position;
         map = new List<Pheromone>();
         InvokeRepeating("LeavePheromone", 0f, pheromoneCooldown);
+        InvokeRepeating("PheromoneSteering", 0f, 0.2f);
     }
 
     // Update is called once per frame
@@ -46,12 +48,9 @@ public class Ant2 : MonoBehaviour
         if(closestFood != null && !carryingFood) desiredDirection = (closestFood.transform.position - transform.position).normalized;
 
         //if(carryingFood) desiredDirection = (anthillTransform.position - transform.position).normalized;
-
-        PheromoneSteering();
+        //PheromoneSteering();
         Wander();
     }
-
-
     /*private void FindClosestFood()
 	{
 		float distanceToClosestFood = Mathf.Infinity;
@@ -88,11 +87,19 @@ public class Ant2 : MonoBehaviour
         }
     }
 
-
+    private void OnBecameInvisible() {
+        if(carryingFood)
+        {
+            GameObject _thisFood = transform.GetChild(0).GetChild(0).gameObject;
+            carryingFood = false;
+            closestFood = null;
+            Destroy (_thisFood);
+        }
+        Destroy(gameObject);
+    }
     private void Wander()
     {
         desiredDirection = (desiredDirection + Random.insideUnitCircle * wanderStrength).normalized;
-
         Vector2 desiredVelocity = desiredDirection * maxSpeed;
         Vector2 desiredSteeringForce = (desiredVelocity - velocity) * steerStrength;
         Vector2 acceleration = Vector2.ClampMagnitude(desiredSteeringForce, steerStrength)/1;
@@ -118,8 +125,9 @@ public class Ant2 : MonoBehaviour
         if(other.transform.tag == "Anthill" && carryingFood)
         {
             GameObject _thisFood = transform.GetChild(0).GetChild(0).gameObject;
-            Destroy (_thisFood);
             carryingFood = false;
+            closestFood = null;
+            Destroy (_thisFood);
             desiredDirection = -desiredDirection;
         }
     }
@@ -144,18 +152,22 @@ public class Ant2 : MonoBehaviour
         float leftSensorValue = GetSensorValue(leftSensor);
         float centerSensorValue = GetSensorValue(centerSensor);
         float rightSensorValue = GetSensorValue(rightSensor);
-
+        //desiredDirection = new Vector2(0,1);
+        //Debug.Log(((Vector2) (Quaternion.Euler(0,0,-45) * desiredDirection)).normalized);
         if(centerSensorValue > Mathf.Max(leftSensorValue, rightSensorValue))
         {
-        Debug.Log("Going forwards towards" + desiredDirection);
+            desiredDirection = (Vector2)(centerSensor.transform.position - transform.position).normalized;
+           // Debug.Log("Going forwards towards" + desiredDirection);
         }
-        else if(leftSensorValue > rightSensorValue)
+            else if(leftSensorValue > rightSensorValue)
         {
-        Debug.Log("Going left" + desiredDirection);
+            desiredDirection = ((Vector2) (Quaternion.Euler(0,0,30) * desiredDirection * Time.deltaTime)).normalized;
+            //Debug.Log("Going left" + desiredDirection);
         }
         else if(rightSensorValue > leftSensorValue)
         {
-        Debug.Log("Going right" + desiredDirection);
+            desiredDirection = ((Vector2) (Quaternion.Euler(0,0,-30) * desiredDirection * Time.deltaTime)).normalized;
+            //Debug.Log("Going right" + desiredDirection);
         }
 
     }
@@ -163,12 +175,19 @@ public class Ant2 : MonoBehaviour
     private float GetSensorValue(GameObject _sensor)
     {
         float sensorValue = 0f;
-        List<Pheromone> found = PheromoneMap.instance.GetAllInCircle(new Vector2(_sensor.transform.position.x, _sensor.transform.position.y), 0.5f, carryingFood ? 0 : 1);
+        List<Pheromone> found = PheromoneMap.instance.GetAllInCircle(new Vector2(_sensor.transform.position.x, _sensor.transform.position.y), sensorRadius, carryingFood ? 0 : 1);
         foreach(Pheromone pheromone in found)
         {
             sensorValue = sensorValue + pheromone.strength;
         }
         return sensorValue;
+    }
+
+    private void OnDrawGizmosSelected() {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(leftSensor.transform.position, sensorRadius);
+        Gizmos.DrawSphere(centerSensor.transform.position, sensorRadius);
+        Gizmos.DrawSphere(rightSensor.transform.position, sensorRadius);
     }
 
 }
